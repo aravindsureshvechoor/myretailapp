@@ -102,6 +102,20 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+class PermanentJourneyPlan(models.Model):
+    user        = models.ForeignKey("User", on_delete=models.CASCADE)
+    store       = models.ForeignKey("Store", on_delete=models.CASCADE)
+    date        = models.DateField(null=True, blank=True)
+    is_active   = models.BooleanField(default=True)
+    created_on  = models.DateTimeField(auto_now_add=True)
+    modified_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table        = "permanent_journey_plans"
+        unique_together = ("user", "store", "date")
+
+    def __str__(self):
+        return f"{self.user} - {self.store} - {self.date}"
 
 class FileUploadTracking(models.Model):
 
