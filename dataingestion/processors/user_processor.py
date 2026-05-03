@@ -31,9 +31,6 @@ def process_user_csv(tracking: FileUploadTracking):
     try:
         file_path = tracking.file.path
 
-        existing_users = set(
-            User.objects.values_list("username", flat=True)
-        )
 
         error_buffer = []
         success_count = 0
@@ -42,7 +39,11 @@ def process_user_csv(tracking: FileUploadTracking):
         chunk_size = 5
 
         for chunk in pd.read_csv(file_path, chunksize=chunk_size):
-
+            existing_users = set(
+                User.objects.filter(
+                    username__in=chunk["username"].tolist()
+                ).values_list("username", flat=True)
+            )
             users_to_create = []
             supervisor_map = {}
 
@@ -58,7 +59,7 @@ def process_user_csv(tracking: FileUploadTracking):
                 phone = str(row.get("phone_number", "")).strip()
                 supervisor_username = str(row.get("supervisor_username", "")).strip()
                 is_active = normalize_bool(row.get("is_active"))
-                # print(first_name, last_name, email, username, user_type, phone, supervisor_username, is_active)
+                
                 row_errors = []
 
                 if not username:
