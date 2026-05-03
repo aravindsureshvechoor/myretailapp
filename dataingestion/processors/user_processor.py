@@ -36,7 +36,7 @@ def process_user_csv(tracking: FileUploadTracking):
         success_count = 0
         failure_count = 0
         row_number = 1
-        chunk_size = 5
+        chunk_size = 5000
 
         for chunk in pd.read_csv(file_path, chunksize=chunk_size):
             existing_users = set(
