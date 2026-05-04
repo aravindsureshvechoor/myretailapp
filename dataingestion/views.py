@@ -64,7 +64,6 @@ class WorkerTaskStatus(APIView):
             "failure_count": tracking.failure_count,
             "created_at": tracking.created_at,
             "completed_at": tracking.completed_at,
-            # "error_file": request.build_absolute_uri(tracking.error_file.url) if tracking.error_file else None,
             "error_file": tracking.error_file.url if tracking.error_file else None,
         }, status=status.HTTP_200_OK)
         
