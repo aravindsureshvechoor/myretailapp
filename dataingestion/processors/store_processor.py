@@ -19,10 +19,23 @@ def validate_number(value):
         return False
 
 
+lookup_cache = {}
+
 def get_or_create_lookup(model, name):
     if not name or str(name).strip().lower() == "nan":
         return None
-    obj, _ = model.objects.get_or_create(name=str(name).strip())
+
+    cleaned_name = str(name).strip()
+
+    cache_key = (model.__name__, cleaned_name.lower())
+
+    if cache_key in lookup_cache:
+        return lookup_cache[cache_key]
+
+    obj, _ = model.objects.get_or_create(name=cleaned_name)
+
+    lookup_cache[cache_key] = obj
+
     return obj
 
 
